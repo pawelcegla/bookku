@@ -5,5 +5,5 @@ one:
   target: https://example.org
 
 two:
-  bookmark_id: ror
+  bookmark_id: ex
   target: https://rubyonrails.org
