@@ -1,4 +1,5 @@
-name: test
+name: Testing
+run-name: Run tests by @${{ github.actor }}
 on: [push, pull_request]
 jobs:
   test:
