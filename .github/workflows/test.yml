@@ -1,6 +1,5 @@
 name: Testing
-run-name: Run tests by @${{ github.actor }}
-on: [push, pull_request]
+on: push
 jobs:
   test:
     runs-on: ubuntu-latest
