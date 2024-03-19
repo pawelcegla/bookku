@@ -23,8 +23,8 @@ jobs:
           chmod 600 ~/.ssh/ghr
       - name: Display context
         run: |
-          echo ${{ github.workflow_run.event.after }}
-          echo ${{ github.workflow_run.event.ref }}
+          echo ${{ github.event.workflow_run.after }}
+          echo ${{ github.event.workflow_run.ref }}
       - name: Run remote command
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
