@@ -22,7 +22,7 @@ jobs:
           echo "$PRIVATE_KEY" > ~/.ssh/ghr
           chmod 600 ~/.ssh/ghr
       - name: Display context (debug)
-        run: echo ${{ toJSON(github.event.workflow_run }}
+        run: echo ${{ toJSON(github.event.workflow_run) }}
       - name: Run remote command
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
