@@ -27,4 +27,4 @@ jobs:
           HOST_NAME: ${{ secrets.HOST_NAME }}
           HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        run: ssh -i ~/.ssh/gha $USER_NAME@$HOST_NAME "cd bookku; git checkout $HEAD_BRANCH; git pull; git checkout $HEAD_SHA"
+        run: ssh -i ~/.ssh/gha $USER_NAME@$HOST_NAME "systemctl --user stop bookku; cd bookku; git checkout $HEAD_BRANCH; git pull; git checkout $HEAD_SHA; ~/.rvm/wrappers/ruby-3.3.0/bundle install;  export RAILS_ENV=production; ~/.rvm/wrappers/ruby-3.3.0/rails db:migrate; systemctl --user start bookku"
