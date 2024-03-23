@@ -19,12 +19,12 @@ jobs:
           chmod 700 ~/.ssh
           echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
-          echo "$PRIVATE_KEY" > ~/.ssh/ghr
-          chmod 600 ~/.ssh/ghr
+          echo "$PRIVATE_KEY" > ~/.ssh/gha
+          chmod 600 ~/.ssh/gha
       - name: Update repository on server
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
           HOST_NAME: ${{ secrets.HOST_NAME }}
           HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        run: ssh -i ~/.ssh/ghr $USER_NAME@$HOST_NAME "cd service; git checkout $HEAD_BRANCH; git pull; git checkout $HEAD_SHA"
+        run: ssh -i ~/.ssh/gha $USER_NAME@$HOST_NAME "cd bookku; git checkout $HEAD_BRANCH; git pull; git checkout $HEAD_SHA"
