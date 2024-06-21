@@ -1,0 +1,2 @@
+foo|https://foo
+bar|https://bar
