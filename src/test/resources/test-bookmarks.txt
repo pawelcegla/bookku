@@ -1,2 +1,2 @@
-foo|https://foo
-bar|https://bar
+foo|test://flight.of.opportunity
+bar|test://brain.access.router
