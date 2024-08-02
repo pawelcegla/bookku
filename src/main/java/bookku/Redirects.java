@@ -24,9 +24,9 @@ public class Redirects {
     @GetMapping("/")
     public ResponseEntity<?> query(@RequestParam(value = "q", required = false) String query) {
         log.info("Querying bookmarks for '{}'", query);
-        return bookmarks.findByKey(query).map(target ->  {
-            log.info("Found, redirecting to '{}'", target);
-            return ResponseEntity.status(TEMPORARY_REDIRECT).header(LOCATION, target).build();
+        return bookmarks.findByHasz(query).map(b ->  {
+            log.info("Found, redirecting to '{}'", b.target());
+            return ResponseEntity.status(TEMPORARY_REDIRECT).header(LOCATION, b.target()).build();
         }).orElseGet(() -> {
             log.info("Not found");
             return ResponseEntity.notFound().build();

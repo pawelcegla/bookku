@@ -12,7 +12,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT, properties = "bookmarks=classpath:test-bookmarks.txt")
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = "spring.datasource.url=jdbc:h2:mem:testdb")
 class BookkuApplicationTests {
 
 	@Test
