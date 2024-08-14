@@ -17,17 +17,29 @@ class BookkuApplicationTests {
 
 	@Test
 	void redirectsShouldWork(@Autowired TestRestTemplate rest) {
-		var foo = rest.getForEntity("/?q=foo", Void.class);
+		var foo = rest.getForEntity("/foo", Void.class);
 		assertEquals(TEMPORARY_REDIRECT, foo.getStatusCode());
 		assertEquals("test://flight.of.opportunity", foo.getHeaders().getFirst(LOCATION));
-		var bar = rest.getForEntity("/?q=bar", Void.class);
+		var bar = rest.getForEntity("/bar", Void.class);
 		assertEquals(TEMPORARY_REDIRECT, bar.getStatusCode());
 		assertEquals("test://brain.access.router", bar.getHeaders().getFirst(LOCATION));
 	}
 
 	@Test
 	void httpNotFoundShouldBeReturnedForNonExistentBookmark(@Autowired TestRestTemplate rest) {
-		var qwerty = rest.getForEntity("/?q=" + randomUUID(), Void.class);
+		var qwerty = rest.getForEntity("/" + randomUUID(), Void.class);
+		assertEquals(NOT_FOUND, qwerty.getStatusCode());
+	}
+
+	@Test
+	void httpNotFoundShouldBeReturnedForNumericQuery(@Autowired TestRestTemplate rest) {
+		var qwerty = rest.getForEntity("/123", Void.class);
+		assertEquals(NOT_FOUND, qwerty.getStatusCode());
+	}
+
+	@Test
+	void httpNotFoundShouldBeReturnedForMultipleSeparatorsInQuery(@Autowired TestRestTemplate rest) {
+		var qwerty = rest.getForEntity("/d-_-b", Void.class);
 		assertEquals(NOT_FOUND, qwerty.getStatusCode());
 	}
 }
