@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
 
@@ -31,5 +33,10 @@ public class Redirects {
             log.info("Not found");
             return ResponseEntity.notFound().build();
         });
+    }
+
+    @GetMapping("/__/b")
+    public String secret(Principal p) {
+        return String.valueOf(p);
     }
 }
