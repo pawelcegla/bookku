@@ -1,0 +1,32 @@
+name: Docker
+on: workflow_dispatch
+jobs:
+  push:
+    name: Build & push Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+          cache: 'maven'
+      - name: Create jar
+        run: ./mvnw package
+      - name: Build Docker image
+        env:
+          CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+          CONTAINER_TAG: ${{ vars.CONTAINER_TAG }}
+        run: docker build -t $CONTAINER_NAME:$CONTAINER_TAG .
+      - name: Login to Docker Hub
+        env:
+          DOCKERHUB_LOGIN: ${{ vars.DOCKERHUB_LOGIN }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_LOGIN --password-stdin
+      - name: Push Docker image
+        env:
+          CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+          CONTAINER_TAG: ${{ vars.CONTAINER_TAG }}
+        run: docker push $CONTAINER_NAME:$CONTAINER_TAG
