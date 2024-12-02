@@ -3,11 +3,10 @@ package bookku;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
 
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
@@ -23,10 +22,10 @@ public class Redirects {
         this.bookmarks = bookmarks;
     }
 
-    @GetMapping("/{query:[a-z][a-z0-9]*(?:[\\-_][a-z][a-z0-9]*)*}")
-    public ResponseEntity<?> query(@PathVariable String query) {
-        log.info("Querying bookmarks for '{}'", query);
-        return bookmarks.findByHasz(query).map(b ->  {
+    @GetMapping("/{slug:[a-z][a-z0-9]*(?:[\\-_][a-z][a-z0-9]*)*}")
+    public ResponseEntity<?> query(@PathVariable String slug) {
+        log.info("Querying bookmarks for '{}'", slug);
+        return bookmarks.findBySlug(slug).map(b ->  {
             log.info("Found, redirecting to '{}'", b.target());
             return ResponseEntity.status(TEMPORARY_REDIRECT).header(LOCATION, b.target()).build();
         }).orElseGet(() -> {
@@ -36,7 +35,7 @@ public class Redirects {
     }
 
     @GetMapping("/__/b")
-    public String secret(Principal p) {
+    public String secret(UsernamePasswordAuthenticationToken p) {
         return String.valueOf(p);
     }
 }

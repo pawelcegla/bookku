@@ -13,7 +13,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.datasource.url=jdbc:h2:mem:testdb", "spring.http.client.redirects=dont-follow"})
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.datasource.url=jdbc:sqlite::memory:", "spring.http.client.redirects=dont-follow"})
 class BookkuTests {
 
 	@Test

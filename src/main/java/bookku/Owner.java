@@ -1,6 +1,4 @@
 package bookku;
 
-import org.springframework.data.annotation.Id;
-
-public record Owner(@Id int id, String ownerName, String hashedPassword) {
+public record Owner(String name, String hashedPassword) {
 }
