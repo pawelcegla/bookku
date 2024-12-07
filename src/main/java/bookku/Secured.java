@@ -1,26 +1,26 @@
 package bookku;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 
 @Controller
+@RequestMapping("/__/b")
 public class Secured {
 
-    private final ObjectMapper json;
-
-    public Secured(ObjectMapper json) {
-        this.json = json;
+    @GetMapping(produces = TEXT_HTML_VALUE)
+    public String secret() {
+        return "secured";
     }
 
-    @GetMapping(value = "/__/b", produces = TEXT_HTML_VALUE)
-    public String secret(UsernamePasswordAuthenticationToken p, Model model) throws JsonProcessingException {
-        model.addAttribute("token", json.writerWithDefaultPrettyPrinter().writeValueAsString(p));
-        return "secured";
+    @PostMapping(consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @ResponseBody
+    public String create(Slug slug, Target target) {
+        return String.format("%s -> %s", slug, target);
     }
 }

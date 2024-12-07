@@ -5,6 +5,13 @@
     <link rel="stylesheet" href="/simple.min.css">
   </head>
   <body>
-    <pre>{{token}}</pre>
+    <form action="/__/b" method="post">
+      <input name="slug">
+      <input name="target">
+      {{#_csrf}}
+      <input type="hidden" name="{{parameterName}}" value="{{token}}">
+      {{/_csrf}}
+      <input type="submit">
+    </form>
   </body>
 </html>
