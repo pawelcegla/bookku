@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
+import java.util.Map;
+
 import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -50,5 +51,12 @@ class BookkuTests {
 		assertTrue(securedEndpointResponse.getStatusCode().is3xxRedirection());
 		assertTrue(securedEndpointResponse.getHeaders().containsKey(LOCATION));
 		assertTrue(securedEndpointResponse.getHeaders().getFirst(LOCATION).endsWith("/login"));
+	}
+
+	@Test
+	void create(@Autowired TestRestTemplate rest) {
+		var res = rest.postForEntity("/__/b", Map.of(), String.class);
+		// TODO
+		assertNotNull(res);
 	}
 }

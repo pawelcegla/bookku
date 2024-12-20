@@ -24,9 +24,9 @@ public class Redirects {
     @GetMapping("/{slug:[a-z][a-z0-9]*(?:[\\-_][a-z][a-z0-9]*)*}")
     public ResponseEntity<?> query(@PathVariable String slug) {
         log.info("Querying bookmarks for '{}'", slug);
-        return bookmarks.findBySlug(slug).map(b ->  {
-            log.info("Found, redirecting to '{}'", b.target());
-            return ResponseEntity.status(TEMPORARY_REDIRECT).header(LOCATION, b.target()).build();
+        return bookmarks.findBySlug(new Slug(slug)).map(t ->  {
+            log.info("Found, redirecting to '{}'", t.value());
+            return ResponseEntity.status(TEMPORARY_REDIRECT).header(LOCATION, t.value()).build();
         }).orElseGet(() -> {
             log.info("Not found");
             return ResponseEntity.notFound().build();
