@@ -1,4 +1,4 @@
-FROM eclipse-temurin:23-alpine
+FROM eclipse-temurin:23-jre-alpine
 RUN mkdir /opt/app
 COPY target/bookku-webapp-0.4.0-SNAPSHOT.jar /opt/app/bookku.jar
 CMD ["java", "-jar", "/opt/app/bookku.jar"]
