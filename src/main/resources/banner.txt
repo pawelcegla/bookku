@@ -9,3 +9,4 @@
 888   d88P Y88..88P Y88..88P 888 "88b 888 "88b Y88b 888
 8888888P"   "Y88P"   "Y88P"  888  888 888  888  "Y88888
 
+Bookku${application.formatted-version} with Spring Boot${spring-boot.formatted-version}
