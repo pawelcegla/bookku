@@ -16,17 +16,24 @@ public class Bookmarks {
         this.jdbc = jdbc;
     }
 
-    Optional<Bookmark> findBySlug(String slug) {
+    Optional<Target> findBySlug(Slug slug) {
         try {
             return Optional.ofNullable(
                     jdbc.queryForObject(
-                            "SELECT slug, target FROM bookmark WHERE slug = :slug;",
-                            Map.of("slug", slug),
-                            (rs, n) -> new Bookmark(rs.getString("slug"), rs.getString("target"))
+                            "SELECT target FROM bookmark WHERE slug = :slug;",
+                            Map.of("slug", slug.value()),
+                            Target.class
                     )
             );
         } catch (DataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    void create(Slug slug, Target target) {
+        jdbc.update(
+                "INSERT INTO bookmark (slug, target) VALUES (:slug, :target);",
+                Map.of("slug", slug.value(), "target", target.value())
+        );
     }
 }
