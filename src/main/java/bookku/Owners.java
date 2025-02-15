@@ -2,13 +2,18 @@ package bookku;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
-import java.util.Optional;
 
-@Repository
-public class Owners {
+@Service
+public class Owners implements UserDetailsService {
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -16,17 +21,20 @@ public class Owners {
         this.jdbc = jdbc;
     }
 
-    Optional<Owner> findByName(String name) {
+    private static UserDetails mapRow(ResultSet rs, int n) throws SQLException {
+        return User.withUsername(rs.getString("name")).password(rs.getString("hashed_password")).build();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            return Optional.ofNullable(
-                    jdbc.queryForObject(
-                            "SELECT name, hashed_password FROM owner WHERE name = :name;",
-                            Map.of("name", name),
-                            (rs, n) -> new Owner(rs.getString("name"), rs.getString("hashed_password"))
-                    )
+            return jdbc.queryForObject(
+                    "SELECT name, hashed_password FROM owner WHERE name = :name;",
+                    Map.of("name", username),
+                    Owners::mapRow
             );
         } catch (DataAccessException e) {
-            return Optional.empty();
+            throw new UsernameNotFoundException("username not found", e);
         }
     }
 }
