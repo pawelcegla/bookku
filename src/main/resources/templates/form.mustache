@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>bookku</title>
     <link rel="stylesheet" href="/simple.min.css">
   </head>
   <body>
-    <form action="/__" method="post">
-      <input name="slug">
-      <input name="target">
-      <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
-      <input type="submit">
-    </form>
+    <header>
+      <h1>bookku</h1>
+    </header>
+    <main>
+      <form action="/__" method="post">
+        <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+        <p><label>slug: <input name="slug"></label></p>
+        <p><label>target: <input name="target"></label></p>
+        <p><button>add bookmark</button></p>
+      </form>
+    </main>
+    <footer>
+      <p>bookku</p>
+    </footer>
   </body>
 </html>
