@@ -40,7 +40,7 @@ public class Bookku {
 	@SuppressWarnings("unused")
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/__/b").authenticated()).formLogin(withDefaults())
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/__").authenticated()).formLogin(withDefaults())
 				.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
 				.build();
 	}

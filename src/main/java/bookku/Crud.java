@@ -8,24 +8,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
-import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 
 @Controller
-@RequestMapping("/__/b")
-public class Secured {
+@RequestMapping("/__")
+public class Crud {
 
-    private static final Logger log = LoggerFactory.getLogger(Secured.class);
+    private static final Logger log = LoggerFactory.getLogger(Crud.class);
 
     private final Bookmarks bookmarks;
 
-    public Secured(Bookmarks bookmarks) {
+    public Crud(Bookmarks bookmarks) {
         this.bookmarks = bookmarks;
     }
 
-    @GetMapping(produces = TEXT_HTML_VALUE)
-    // TODO provide a descriptive name for the method and template name
-    public String secret() {
-        return "secured_form";
+    @GetMapping
+    public String form() {
+        return "form";
     }
 
     @PostMapping(consumes = APPLICATION_FORM_URLENCODED_VALUE)

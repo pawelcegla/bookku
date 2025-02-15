@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @WebMvcTest
-public class FormTests {
+public class CrudTests {
 
     @Autowired
     MockMvc mvc;
@@ -25,7 +25,7 @@ public class FormTests {
     @WithMockUser
     void successfulFormSubmissionShouldRedirectToTarget() throws Exception {
         mvc.perform(
-                post("/__/b")
+                post("/__")
                         .contentType(APPLICATION_FORM_URLENCODED)
                         .param("slug", "ex")
                         .param("target", "https://example.org")

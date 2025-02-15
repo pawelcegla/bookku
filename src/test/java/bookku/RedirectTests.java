@@ -1,13 +1,19 @@
 package bookku;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
+import java.util.stream.Stream;
+
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -16,37 +22,40 @@ import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
 @SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.datasource.url=jdbc:sqlite::memory:", "spring.http.client.redirects=dont-follow"})
 class RedirectTests {
 
-	@Test
-	void redirectsShouldWork(@Autowired TestRestTemplate rest) {
-		var foo = rest.getForEntity("/foo", Void.class);
-		assertEquals(TEMPORARY_REDIRECT, foo.getStatusCode());
-		assertEquals("test://flight.of.opportunity", foo.getHeaders().getFirst(LOCATION));
-		var bar = rest.getForEntity("/bar", Void.class);
-		assertEquals(TEMPORARY_REDIRECT, bar.getStatusCode());
-		assertEquals("test://brain.access.router", bar.getHeaders().getFirst(LOCATION));
+	@Autowired TestRestTemplate rest;
+
+	@ParameterizedTest
+	@MethodSource
+	void redirectsShouldWork(String slug, String target) {
+		var response = rest.getForEntity(slug, Void.class);
+		assertEquals(TEMPORARY_REDIRECT, response.getStatusCode());
+		assertEquals(target, response.getHeaders().getFirst(LOCATION));
+	}
+
+	static Stream<Arguments> redirectsShouldWork() {
+		return Stream.of(
+				arguments("/b/foo", "test://flight.of.opportunity"),
+				arguments("/b/bar", "test://brain.access.router"),
+				arguments("/b/123", "test://one.two.three"),
+				arguments("/b/857620a5-79ed-4988-8439-382b912ef943", "test://undefined.unsafe.initial.design")
+		);
 	}
 
 	@Test
-	void httpNotFoundShouldBeReturnedForNonExistentBookmark(@Autowired TestRestTemplate rest) {
-		var nonExistentBookmarkResponse = rest.getForEntity("/" + randomUUID(), Void.class);
+	void httpNotFoundShouldBeReturnedForNonExistentBookmark() {
+		var nonExistentBookmarkResponse = rest.getForEntity("/b/" + randomUUID(), Void.class);
 		assertEquals(NOT_FOUND, nonExistentBookmarkResponse.getStatusCode());
 	}
 
 	@Test
-	void httpNotFoundShouldBeReturnedForNumericQuery(@Autowired TestRestTemplate rest) {
-		var numericQueryResponse = rest.getForEntity("/123", Void.class);
-		assertEquals(NOT_FOUND, numericQueryResponse.getStatusCode());
-	}
-
-	@Test
-	void httpNotFoundShouldBeReturnedForMultipleSeparatorsInQuery(@Autowired TestRestTemplate rest) {
-		var multipleSeparatorsQueryResponse = rest.getForEntity("/d-_-b", Void.class);
+	void httpNotFoundShouldBeReturnedForMultipleSeparatorsInQuery() {
+		var multipleSeparatorsQueryResponse = rest.getForEntity("/b/d-_-b", Void.class);
 		assertEquals(NOT_FOUND, multipleSeparatorsQueryResponse.getStatusCode());
 	}
 
 	@Test
-	void loginLocationShouldBeReturnedForSecuredEndpoint(@Autowired TestRestTemplate rest) {
-		var securedEndpointResponse = rest.getForEntity("/__/b", String.class);
+	void loginLocationShouldBeReturnedForSecuredEndpoint() {
+		var securedEndpointResponse = rest.getForEntity("/__", String.class);
 		assertTrue(securedEndpointResponse.getStatusCode().is3xxRedirection());
 		assertTrue(securedEndpointResponse.getHeaders().containsKey(LOCATION));
 		assertTrue(securedEndpointResponse.getHeaders().getFirst(LOCATION).endsWith("/login"));
