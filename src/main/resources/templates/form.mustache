@@ -11,8 +11,8 @@
     <main>
       <form action="/__" method="post">
         <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
-        <p><label>slug: <input name="slug"></label></p>
-        <p><label>target: <input name="target"></label></p>
+        <p><label>slug: <input name="slug" value="{{slug}}"></label></p>
+        <p><label>target: <input name="target" value="{{target}}"></label></p>
         <p><button>add bookmark</button></p>
       </form>
     </main>

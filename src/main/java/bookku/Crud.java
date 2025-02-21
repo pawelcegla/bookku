@@ -7,8 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigInteger;
+import java.util.Base64;
+
+import static java.lang.Character.MAX_RADIX;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 
 @Controller
@@ -24,7 +30,15 @@ public class Crud {
     }
 
     @GetMapping
-    public String form(UriComponentsBuilder builder, Model model) {
+    public String form(UriComponentsBuilder builder, Model model, @RequestParam(required = false) String target) {
+        model.addAttribute("slug", "");
+        model.addAttribute("target", "");
+        if (target != null && !target.isBlank()) {
+            var decodedTarget = Base64.getUrlDecoder().decode(target);
+            var calculatedSlug = new BigInteger(1, decodedTarget).mod(BigInteger.valueOf(MAX_RADIX * MAX_RADIX * MAX_RADIX)).toString(MAX_RADIX);
+            model.addAttribute("slug", calculatedSlug);
+            model.addAttribute("target", new String(decodedTarget, UTF_8));
+        }
         model.addAttribute("redirect", builder.cloneBuilder().path("b/%s").build());
         model.addAttribute(
                 "bookmarklet",
