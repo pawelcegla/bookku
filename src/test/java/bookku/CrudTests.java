@@ -9,7 +9,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @WebMvcTest
@@ -31,5 +33,14 @@ public class CrudTests {
                         .param("target", "https://example.org")
                         .with(csrf())
         ).andExpect(redirectedUrl("https://example.org"));
+    }
+
+    @Test
+    @WithMockUser
+    void targetParamShouldPopulateFormAndGenerateSlug() throws Exception {
+        mvc.perform(get("/__").param("target", "aHR0cHM6Ly9leGFtcGxlLm9yZw=="))
+                .andExpectAll(
+                        model().attribute("target", "https://example.org"),
+                        model().attribute("slug", "g87"));
     }
 }
