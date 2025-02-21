@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import static java.lang.Character.MAX_RADIX;
@@ -22,11 +24,14 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 public class Crud {
 
     private static final Logger log = LoggerFactory.getLogger(Crud.class);
+    private static final BigInteger mod = BigInteger.valueOf(MAX_RADIX * MAX_RADIX * MAX_RADIX);
 
     private final Bookmarks bookmarks;
+    private final MessageDigest sha;
 
-    public Crud(Bookmarks bookmarks) {
+    public Crud(Bookmarks bookmarks) throws NoSuchAlgorithmException {
         this.bookmarks = bookmarks;
+        this.sha = MessageDigest.getInstance("SHA3-224");
     }
 
     @GetMapping
@@ -35,7 +40,8 @@ public class Crud {
         model.addAttribute("target", "");
         if (target != null && !target.isBlank()) {
             var decodedTarget = Base64.getUrlDecoder().decode(target);
-            var calculatedSlug = new BigInteger(1, decodedTarget).mod(BigInteger.valueOf(MAX_RADIX * MAX_RADIX * MAX_RADIX)).toString(MAX_RADIX);
+            sha.reset();
+            var calculatedSlug = new BigInteger(1, sha.digest(decodedTarget)).mod(mod).toString(MAX_RADIX);
             model.addAttribute("slug", calculatedSlug);
             model.addAttribute("target", new String(decodedTarget, UTF_8));
         }
