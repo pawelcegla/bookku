@@ -3,10 +3,13 @@ package bookku;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,5 +45,18 @@ public class CrudTests {
                 .andExpectAll(
                         model().attribute("target", "https://example.org/"),
                         model().attribute("slug", "4ia"));
+    }
+
+    @Test
+    @WithMockUser
+    void databaseErrorShouldShowAnErrorOnTheForm() throws Exception {
+        doThrow(UncategorizedSQLException.class).when(bookmarks).create(any(), any());
+        mvc.perform(
+                post("/__")
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .param("slug", "ex")
+                        .param("target", "https://example.org")
+                        .with(csrf())
+        ).andExpect(model().attribute("error", "Bookmark with this slug already exists!"));
     }
 }
