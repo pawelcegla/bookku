@@ -21,6 +21,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class Bookku {
 
 	private static final Logger javaSystemPropertiesLogger = LoggerFactory.getLogger("bookku.JavaSystemProperties");
+	private static final Logger gitPropertiesLogger = LoggerFactory.getLogger("bookku.GitProperties");
 
 	public static void main(String[] args) {
 		new SpringApplicationBuilder()
@@ -30,6 +31,7 @@ public class Bookku {
 	}
 
 	private static void applicationPrepared(ApplicationPreparedEvent event) {
+		gitPropertiesLogger.info("Revision: '{}'", event.getApplicationContext().getEnvironment().getProperty("git.commit.id.full", "N/A"));
 		System.getProperties().entrySet().stream()
 				.filter(p -> p.getKey().toString().startsWith("java."))
 				.sorted(Comparator.comparing(p -> p.getKey().toString()))
