@@ -2,14 +2,11 @@ package bookku;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,6 +30,16 @@ public class Crud {
 
     public Crud(Bookmarks bookmarks) {
         this.bookmarks = bookmarks;
+    }
+
+    @ModelAttribute("revision")
+    String revision(@Value("${git.commit.id:N/A}") String revision) {
+        return revision;
+    }
+
+    @ModelAttribute("version")
+    String version(@Value("${git.build.version:N/A}") String version) {
+        return version;
     }
 
     @ModelAttribute("redirect")

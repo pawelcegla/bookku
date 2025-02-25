@@ -31,7 +31,7 @@ public class Bookku {
 	}
 
 	private static void applicationPrepared(ApplicationPreparedEvent event) {
-		gitPropertiesLogger.info("Revision: '{}'", event.getApplicationContext().getEnvironment().getProperty("git.commit.id.full", "N/A"));
+		gitPropertiesLogger.info("Revision: '{}'", event.getApplicationContext().getEnvironment().getProperty("git.commit.id", "N/A"));
 		System.getProperties().entrySet().stream()
 				.filter(p -> p.getKey().toString().startsWith("java."))
 				.sorted(Comparator.comparing(p -> p.getKey().toString()))
