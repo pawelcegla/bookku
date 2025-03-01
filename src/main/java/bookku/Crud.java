@@ -76,10 +76,10 @@ public class Crud {
     }
 
     @PostMapping(consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String create(Slug slug, Target target, Model model) {
+    public String create(Slug slug, Target target, boolean restricted, Model model) {
         log.info("Form submitted: '{}' -> '{}'", slug.value(), target.value());
         try {
-            bookmarks.create(slug, target);
+            bookmarks.create(slug, target, restricted);
             log.info("Bookmark created successfully");
             return String.format("redirect:%s", target.value());
         } catch (DataAccessException e) {

@@ -1,9 +1,9 @@
-INSERT INTO bookmark (slug, target) VALUES
-  ('foo', 'test://flight.of.opportunity'),
-  ('bar', 'test://brain.access.router'),
-  ('123', 'test://one.two.three'),
-  ('857620a5-79ed-4988-8439-382b912ef943', 'test://undefined.unsafe.initial.design'),
-  ('d-_-b', 'test://dee.bee');
+INSERT INTO bookmark (slug, target, restricted) VALUES
+  ('foo', 'test://flight.of.opportunity', 0),
+  ('bar', 'test://brain.access.router', 0),
+  ('123', 'test://one.two.three', 0),
+  ('857620a5-79ed-4988-8439-382b912ef943', 'test://undefined.unsafe.initial.design', 0),
+  ('d-_-b', 'test://dee.bee', 0);
 
 -- tester/tester
 INSERT INTO owner (name, hashed_password) VALUES

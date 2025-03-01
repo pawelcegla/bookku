@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
 
@@ -24,9 +26,9 @@ public class Redirects {
     }
 
     @GetMapping("/{slug:[a-z0-9]+(?:[\\-_][a-z0-9]+)*}")
-    public ResponseEntity<?> query(@PathVariable Slug slug) {
+    public ResponseEntity<?> query(@PathVariable Slug slug, Principal principal) {
         log.info("Querying bookmarks for '{}'", slug.value());
-        return bookmarks.findBySlug(slug).map(t ->  {
+        return bookmarks.findBySlug(slug, principal).map(t ->  {
             log.info("Found, redirecting to '{}'", t.value());
             return ResponseEntity.status(TEMPORARY_REDIRECT).header(LOCATION, t.value()).build();
         }).orElseGet(() -> {
