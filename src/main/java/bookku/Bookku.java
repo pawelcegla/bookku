@@ -20,9 +20,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class Bookku {
 
-	private static final Logger javaSystemPropertiesLogger = LoggerFactory.getLogger("bookku.JavaSystemProperties");
-	private static final Logger gitPropertiesLogger = LoggerFactory.getLogger("bookku.GitProperties");
-
 	public static void main(String[] args) {
 		new SpringApplicationBuilder()
 				.sources(Bookku.class)
@@ -31,11 +28,12 @@ public class Bookku {
 	}
 
 	private static void applicationPrepared(ApplicationPreparedEvent event) {
-		gitPropertiesLogger.info("Revision: '{}'", event.getApplicationContext().getEnvironment().getProperty("git.commit.id", "N/A"));
+		LoggerFactory.getLogger("bookku.base-url").info(event.getApplicationContext().getEnvironment().getProperty("bookku.base-url"));
+		LoggerFactory.getLogger("bookku.git.revision").info(event.getApplicationContext().getEnvironment().getProperty("git.commit.id", "N/A"));
 		System.getProperties().entrySet().stream()
 				.filter(p -> p.getKey().toString().startsWith("java."))
 				.sorted(Comparator.comparing(p -> p.getKey().toString()))
-				.forEach(p -> javaSystemPropertiesLogger.info("{}: {}", p.getKey(), p.getValue()));
+				.forEach(p -> LoggerFactory.getLogger("bookku."+ p.getKey()).info(String.valueOf(p.getValue())));
 	}
 
 	@Bean

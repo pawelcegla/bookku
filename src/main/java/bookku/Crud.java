@@ -6,11 +6,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -27,31 +32,33 @@ public class Crud {
     private static final BigInteger mod = BigInteger.valueOf(MAX_RADIX * MAX_RADIX * MAX_RADIX);
 
     private final Bookmarks bookmarks;
+    private final UriComponentsBuilder baseUrl;
 
-    public Crud(Bookmarks bookmarks) {
+    public Crud(Bookmarks bookmarks, @Value("${bookku.base-url}") URI baseUrl) {
         this.bookmarks = bookmarks;
+        this.baseUrl = UriComponentsBuilder.fromUri(baseUrl);
     }
 
     @ModelAttribute("revision")
-    String revision(@Value("${git.commit.id:N/A}") String revision) {
+    String revision(@Value("${git.commit.id:revision placeholder}") String revision) {
         return revision;
     }
 
     @ModelAttribute("version")
-    String version(@Value("${git.build.version:N/A}") String version) {
+    String version(@Value("${git.build.version:version placeholder}") String version) {
         return version;
     }
 
     @ModelAttribute("redirect")
     UriComponents redirect(UriComponentsBuilder builder) {
-        return builder.path("b/%s").build();
+        return baseUrl.cloneBuilder().path("b/%s").build();
     }
 
     @ModelAttribute("bookmarklet")
     String bookmarklet(UriComponentsBuilder builder) {
         return String.format(
                 "javascript:window.location='%s?target='+window.btoa(window.location).replaceAll('+','-').replaceAll('/','_');",
-                builder.path("__").build());
+                baseUrl.cloneBuilder().path("__").build());
     }
 
     @GetMapping
