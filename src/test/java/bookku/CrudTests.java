@@ -9,6 +9,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -50,7 +51,7 @@ public class CrudTests {
     @Test
     @WithMockUser
     void databaseErrorShouldShowAnErrorOnTheForm() throws Exception {
-        doThrow(UncategorizedSQLException.class).when(bookmarks).create(any(), any());
+        doThrow(UncategorizedSQLException.class).when(bookmarks).create(any(), any(), anyBoolean());
         mvc.perform(
                 post("/__")
                         .contentType(APPLICATION_FORM_URLENCODED)

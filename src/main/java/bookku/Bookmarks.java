@@ -34,10 +34,10 @@ public class Bookmarks {
         }
     }
 
-    void create(Slug slug, Target target) {
+    void create(Slug slug, Target target, boolean restricted) {
         jdbc.update(
-                "INSERT INTO bookmark (slug, target) VALUES (:slug, :target);",
-                Map.of("slug", slug.value(), "target", target.value())
+                "INSERT INTO bookmark (slug, target, restricted) VALUES (:slug, :target, :restricted);",
+                Map.of("slug", slug.value(), "target", target.value(), "restricted", restricted ? 1 : 0)
         );
     }
 }
