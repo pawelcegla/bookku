@@ -4,19 +4,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.jdbc.UncategorizedSQLException;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.security.Principal;
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 public class CrudTests {
@@ -59,5 +67,19 @@ public class CrudTests {
                         .param("target", "https://example.org")
                         .with(csrf())
         ).andExpect(model().attribute("error", "Bookmark with this slug already exists!"));
+    }
+
+    @Test
+    @WithMockUser
+    void loggedInUserShouldRetrieveRestrictedBookmark() throws Exception {
+        when(bookmarks.findBySlug(eq(new Slug("secret")), any(Principal.class))).thenReturn(Optional.of(new Target("test://top.secret")));
+        mvc.perform(get("/b/secret")).andExpect(redirectedUrl("test://top.secret"));
+    }
+
+    @Test
+    @WithAnonymousUser
+    void anonymousUserShouldNotRetrieveRestrictedBookmark() throws Exception {
+        when(bookmarks.findBySlug(eq(new Slug("secret")), isNull(Principal.class))).thenReturn(Optional.empty());
+        mvc.perform(get("/b/secret")).andExpect(status().isNotFound());
     }
 }
