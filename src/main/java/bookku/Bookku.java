@@ -29,6 +29,9 @@ public class Bookku {
 	private static void applicationPrepared(ApplicationPreparedEvent event) {
 		LoggerFactory.getLogger("bookku.base-url").info(event.getApplicationContext().getEnvironment().getProperty("bookku.base-url"));
 		LoggerFactory.getLogger("bookku.git.revision").info(event.getApplicationContext().getEnvironment().getProperty("git.commit.id", "N/A"));
+		LoggerFactory.getLogger("bookku.memory.free").info(String.valueOf(Runtime.getRuntime().freeMemory() / 1048576));
+		LoggerFactory.getLogger("bookku.memory.max").info(String.valueOf(Runtime.getRuntime().maxMemory() / 1048576));
+		LoggerFactory.getLogger("bookku.memory.total").info(String.valueOf(Runtime.getRuntime().totalMemory() / 1048576));
 		System.getProperties().entrySet().stream()
 				.filter(p -> p.getKey().toString().startsWith("java."))
 				.sorted(Comparator.comparing(p -> p.getKey().toString()))
