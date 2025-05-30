@@ -10,12 +10,12 @@
 	</parent>
 	<groupId>bookku</groupId>
 	<artifactId>bookku-webapp</artifactId>
-	<version>0.10.0-SNAPSHOT</version>
+	<version>0.10.0</version>
 	<name>bookku</name>
 	<description>bookku</description>
 	<properties>
 		<argLine/>
-		<java.version>23</java.version>
+		<java.version>24</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
