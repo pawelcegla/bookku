@@ -57,7 +57,7 @@ class RedirectTests {
 	void loginLocationShouldBeReturnedForSecuredEndpoint() {
 		var securedEndpointResponse = rest.getForEntity("/__", String.class);
 		assertTrue(securedEndpointResponse.getStatusCode().is3xxRedirection());
-		assertTrue(securedEndpointResponse.getHeaders().containsKey(LOCATION));
+		assertTrue(securedEndpointResponse.getHeaders().containsHeader(LOCATION));
 		assertTrue(securedEndpointResponse.getHeaders().getFirst(LOCATION).endsWith("/login"));
 	}
 }
