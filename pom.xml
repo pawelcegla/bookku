@@ -15,7 +15,7 @@
 	<description>bookku</description>
 	<properties>
 		<argLine/>
-		<java.version>24</java.version>
+		<java.version>25</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
