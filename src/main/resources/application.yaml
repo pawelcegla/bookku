@@ -1,0 +1,19 @@
+bookku:
+  base-url: http://localhost:${server.port:8080}
+
+server:
+  tomcat:
+    threads:
+      max: 1
+
+spring:
+  application:
+    name: bookku
+  config:
+    import: optional:classpath:git.properties
+  datasource:
+    hikari:
+      maximum-pool-size: 1
+  mustache:
+    servlet:
+      expose-request-attributes: true

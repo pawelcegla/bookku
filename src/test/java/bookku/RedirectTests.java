@@ -5,8 +5,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.util.stream.Stream;
 
@@ -19,10 +20,12 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.datasource.url=jdbc:sqlite::memory:", "spring.http.client.redirects=dont-follow"})
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"spring.datasource.url=jdbc:sqlite::memory:", "spring.http.clients.redirects=dont-follow"})
+@AutoConfigureTestRestTemplate
 class RedirectTests {
 
-	@Autowired TestRestTemplate rest;
+	@Autowired
+	TestRestTemplate rest;
 
 	@ParameterizedTest
 	@MethodSource
@@ -57,7 +60,7 @@ class RedirectTests {
 	void loginLocationShouldBeReturnedForSecuredEndpoint() {
 		var securedEndpointResponse = rest.getForEntity("/__", String.class);
 		assertTrue(securedEndpointResponse.getStatusCode().is3xxRedirection());
-		assertTrue(securedEndpointResponse.getHeaders().containsKey(LOCATION));
+		assertTrue(securedEndpointResponse.getHeaders().containsHeader(LOCATION));
 		assertTrue(securedEndpointResponse.getHeaders().getFirst(LOCATION).endsWith("/login"));
 	}
 }
