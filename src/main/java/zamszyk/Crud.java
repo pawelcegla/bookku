@@ -1,4 +1,4 @@
-package bookku;
+package zamszyk;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class Crud {
     private final Bookmarks bookmarks;
     private final UriComponentsBuilder baseUrl;
 
-    public Crud(Bookmarks bookmarks, @Value("${bookku.base-url}") URI baseUrl) {
+    public Crud(Bookmarks bookmarks, @Value("${zamszyk.base-url}") URI baseUrl) {
         this.bookmarks = bookmarks;
         this.baseUrl = UriComponentsBuilder.fromUri(baseUrl);
     }
@@ -51,7 +51,7 @@ public class Crud {
 
     @ModelAttribute("redirect")
     UriComponents redirect(UriComponentsBuilder builder) {
-        return baseUrl.cloneBuilder().path("b/%s").build();
+        return baseUrl.cloneBuilder().path("z/%s").build();
     }
 
     @ModelAttribute("bookmarklet")

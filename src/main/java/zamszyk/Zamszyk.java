@@ -1,4 +1,4 @@
-package bookku;
+package zamszyk;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,25 +17,25 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @SpringBootApplication
 @EnableWebSecurity
-public class Bookku {
+public class Zamszyk {
 
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		new SpringApplicationBuilder()
-				.sources(Bookku.class)
+				.sources(Zamszyk.class)
 				.listeners((ApplicationPreparedEvent ape) -> applicationPrepared(ape))
 				.run(args);
 	}
 
 	private static void applicationPrepared(ApplicationPreparedEvent event) {
-		LoggerFactory.getLogger("bookku.base-url").info(event.getApplicationContext().getEnvironment().getProperty("bookku.base-url"));
-		LoggerFactory.getLogger("bookku.git.revision").info(event.getApplicationContext().getEnvironment().getProperty("git.commit.id", "N/A"));
-		LoggerFactory.getLogger("bookku.memory.free").info(String.valueOf(Runtime.getRuntime().freeMemory() / 1048576));
-		LoggerFactory.getLogger("bookku.memory.max").info(String.valueOf(Runtime.getRuntime().maxMemory() / 1048576));
-		LoggerFactory.getLogger("bookku.memory.total").info(String.valueOf(Runtime.getRuntime().totalMemory() / 1048576));
+		LoggerFactory.getLogger("zamszyk.base-url").info(event.getApplicationContext().getEnvironment().getProperty("zamszyk.base-url"));
+		LoggerFactory.getLogger("zamszyk.git.revision").info(event.getApplicationContext().getEnvironment().getProperty("git.commit.id", "N/A"));
+		LoggerFactory.getLogger("zamszyk.memory.free").info(String.valueOf(Runtime.getRuntime().freeMemory() / 1048576));
+		LoggerFactory.getLogger("zamszyk.memory.max").info(String.valueOf(Runtime.getRuntime().maxMemory() / 1048576));
+		LoggerFactory.getLogger("zamszyk.memory.total").info(String.valueOf(Runtime.getRuntime().totalMemory() / 1048576));
 		System.getProperties().entrySet().stream()
 				.filter(p -> p.getKey().toString().startsWith("java."))
 				.sorted(Comparator.comparing(p -> p.getKey().toString()))
-				.forEach(p -> LoggerFactory.getLogger("bookku."+ p.getKey()).info(String.valueOf(p.getValue())));
+				.forEach(p -> LoggerFactory.getLogger("zamszyk."+ p.getKey()).info(String.valueOf(p.getValue())));
 	}
 
 	@Bean

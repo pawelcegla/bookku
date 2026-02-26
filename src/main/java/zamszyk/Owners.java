@@ -1,4 +1,4 @@
-package bookku;
+package zamszyk;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
