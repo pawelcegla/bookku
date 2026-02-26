@@ -1,4 +1,4 @@
-package bookku;
+package zamszyk;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,22 +37,22 @@ class RedirectTests {
 
 	static Stream<Arguments> redirectsShouldWork() {
 		return Stream.of(
-				arguments("/b/foo", "test://flight.of.opportunity"),
-				arguments("/b/bar", "test://brain.access.router"),
-				arguments("/b/123", "test://one.two.three"),
-				arguments("/b/857620a5-79ed-4988-8439-382b912ef943", "test://undefined.unsafe.initial.design")
+				arguments("/z/foo", "test://flight.of.opportunity"),
+				arguments("/z/bar", "test://brain.access.router"),
+				arguments("/z/123", "test://one.two.three"),
+				arguments("/z/857620a5-79ed-4988-8439-382b912ef943", "test://undefined.unsafe.initial.design")
 		);
 	}
 
 	@Test
 	void httpNotFoundShouldBeReturnedForNonExistentBookmark() {
-		var nonExistentBookmarkResponse = rest.getForEntity("/b/" + randomUUID(), Void.class);
+		var nonExistentBookmarkResponse = rest.getForEntity("/z/" + randomUUID(), Void.class);
 		assertEquals(NOT_FOUND, nonExistentBookmarkResponse.getStatusCode());
 	}
 
 	@Test
 	void httpNotFoundShouldBeReturnedForMultipleSeparatorsInQuery() {
-		var multipleSeparatorsQueryResponse = rest.getForEntity("/b/d-_-b", Void.class);
+		var multipleSeparatorsQueryResponse = rest.getForEntity("/z/d-_-b", Void.class);
 		assertEquals(NOT_FOUND, multipleSeparatorsQueryResponse.getStatusCode());
 	}
 

@@ -1,4 +1,4 @@
-package bookku;
+package zamszyk;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.TEMPORARY_REDIRECT;
 
 @RestController
-@RequestMapping("/b")
+@RequestMapping("/z")
 public class Redirects {
 
     private static final Logger log = LoggerFactory.getLogger(Redirects.class);

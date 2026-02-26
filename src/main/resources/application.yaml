@@ -1,4 +1,4 @@
-bookku:
+zamszyk:
   base-url: http://localhost:${server.port:8080}
 
 server:
@@ -8,7 +8,7 @@ server:
 
 spring:
   application:
-    name: bookku
+    name: zamszyk
   config:
     import: optional:classpath:git.properties
   datasource:
